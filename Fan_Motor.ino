@@ -1,3 +1,5 @@
+// Fan motor iteration 3 (I think this is good)
+
 volatile unsigned char* port_e = (unsigned char*) 0x2E; 
 volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
 volatile unsigned char* pin_e  = (unsigned char*) 0x2C;
@@ -19,7 +21,6 @@ void loop() {
   *port_e |= 0b00001000; //set pin 5 to HIGH
   *port_e &= ~(0b00000100); //set pin 4 to LOW
   *port_e |= 0b00000010;
-  //analogWrite(3, 200); //set pin 3 to a speed (full speed = 255)
   
   delay(1000);
   *port_e |= ~(0b00000010);
@@ -27,6 +28,7 @@ void loop() {
 }
 
 
+//Fan motor iteration 2
 
 // volatile unsigned char* port_e = (unsigned char*) 0x2E; 
 // volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
@@ -57,7 +59,7 @@ void loop() {
 
 
 
-//Fan Motor Base Code
+//Fan motor iteration 1
 
 // #define ENABLE 5
 // #define DIRA 3
