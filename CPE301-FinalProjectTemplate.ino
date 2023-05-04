@@ -136,10 +136,7 @@ void U0init(unsigned int U0baud)
 
 int watercheck(){
     resval = analogRead(respin);
-    if(resval <= 100){
-        *port_e &= ~(0b00001000);
-        *port_e &= ~(0b00000100);
-        *port_e &= ~(0b00000010);
+    if(resval <= 75){
       return(1);
     }
     else{
