@@ -8,15 +8,15 @@ int waterlevel;
 void setup (){
   U0init(9600);
   
- volatile unsigned char* port_e = (unsigned char*) 0x2E; 
-volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
-volatile unsigned char* pin_e  = (unsigned char*) 0x2C;
+  volatile unsigned char* port_e = (unsigned char*) 0x2E; 
+  volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
+  volatile unsigned char* pin_e  = (unsigned char*) 0x2C;
   
   
 }
 
 void loop (){
-/*
+
 Serial.begin(9600); //set baud rate
 
 *ddr_e |= 0b00001000; //enable pin 5 as output
@@ -24,7 +24,7 @@ Serial.begin(9600); //set baud rate
 *ddr_e |= 0b00000010; //enable pin 3 as output
 
 
-
+/*
   if button pressed, then disable system{
     RTC timestamps disabled
     Yellow LED on
