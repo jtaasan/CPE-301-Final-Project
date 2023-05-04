@@ -37,32 +37,32 @@ void loop() {
 
 // Fan motor iteration 3 
 
-volatile unsigned char* port_e = (unsigned char*) 0x2E; 
-volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
-volatile unsigned char* pin_e  = (unsigned char*) 0x2C;
+//volatile unsigned char* port_e = (unsigned char*) 0x2E; 
+//volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
+//volatile unsigned char* pin_e  = (unsigned char*) 0x2C;
 
-void setup() {
+//void setup() {
   // put your setup code here, to run once:
-Serial.begin(9600); //set baud rate
+//Serial.begin(9600); //set baud rate
 
-*ddr_e |= 0b00001000; //enable pin 5 as output
-*ddr_e |= 0b00000100; //enable pin 4 as output
-*ddr_e |= 0b00000010; //enable pin 3 as output
+//*ddr_e |= 0b00001000; //enable pin 5 as output
+//*ddr_e |= 0b00000100; //enable pin 4 as output
+//*ddr_e |= 0b00000010; //enable pin 3 as output
 
 
-}
+//}
 
-void loop() {
+//void loop() {
   // put your main code here, to run repeatedly:
 
-  *port_e |= 0b0000100; //set pin 5 to HIGH
-  *port_e &= ~(0b000001000); //set pin 4 to LOW
-  *port_e |= 0b00000010;
+  //*port_e |= 0b0000100; //set pin 5 to HIGH
+  //*port_e &= ~(0b000001000); //set pin 4 to LOW
+  //*port_e |= 0b00000010;
   
-  delay(1000);
-  *port_e |= ~(0b00000010);
-  delay(1000);
-}
+  //delay(1000);
+  //*port_e |= ~(0b00000010);
+  //delay(1000);
+//}
 
 //
 
