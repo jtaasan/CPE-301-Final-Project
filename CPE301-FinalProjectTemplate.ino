@@ -65,6 +65,7 @@ void loop (){
     int level = ALEX'S FUNCTION();
     if(level =< threshold){
       display error
+      Serial.println("water level is too low");
       return(1);
     }
     else{
