@@ -19,12 +19,14 @@ int respin = A5; // sensor pin used for reservoir
 
 void setup (){
   U0init(9600);
+  
+  *ddr_e |= 0b00001000; //FAN MOTOR PIN 5
+  *ddr_e |= 0b00000100; //FAN MOTOR PIN 4
+  *ddr_e |= 0b00000010; //FAN MOTOR PIN 3
 }
 
 void loop (){
-*ddr_e |= 0b00001000; //enable pin 5 as output
-*ddr_e |= 0b00000100; //enable pin 4 as output
-*ddr_e |= 0b00000010; //enable pin 3 as output
+
 
 
 /*
