@@ -3,23 +3,31 @@
 
 //barebones/structure
 
-volatile unsigned char* port_e = (unsigned char*) 0x2E; 
-volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
-volatile unsigned char* pin_e  = (unsigned char*) 0x2C;
-
 //includes (put libraries in here)
 #include <Stepper.h>
 
+volatile unsigned char* port_e = (unsigned char*) 0x2E; 
+volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
+volatile unsigned char* pin_e  = (unsigned char*) 0x2C;
 
 //water variables
 int waterlevel;
 int resval = 0;  // holds the value for reservoir
 int respin = A5; // sensor pin used for reservoir
 
+//Vent Stepper Motor Variables
+const int StepsPerRev = 100; 
+Stepper myMotor(StepsPerRev, 42, 44, 46, 48);
+int Pval = 0;
+int potenVal = 0;
 
 void setup (){
   U0init(9600);
   
+  //vent speed
+    myMotor.setSpeed(200);
+  
+  //fan motor
   *ddr_e |= 0b00001000; //FAN MOTOR PIN 5
   *ddr_e |= 0b00000100; //FAN MOTOR PIN 4
   *ddr_e |= 0b00000010; //FAN MOTOR PIN 3
@@ -39,7 +47,7 @@ void loop (){
     //Do these Anyways
     waterlevel = watercheck();    //Water Level Monitoring 
     Templevel = dhtfunction();    //Humidity and Temperature Displayed
-    vent function();              //Change Vent Position if Needed
+    Vent_control();             //Change Vent Position if Needed
 
     if(waterlevel == 1){
       display error
@@ -100,8 +108,16 @@ void loop (){
     insert RTC function here to keep track of time
   }
 
-  void vent function(){
-    turns vent
+//controls vent stepper motor
+  void Vent_control(){
+    potenVal = map(analogRead(A0),0,1023,0,500);
+  
+  //turns vent based on potentiometer
+    if(potenVal>Pval)
+      myMotor.step(5);
+    if(potenVal<Pval)
+      myMotor.step(-5);
+   Pval = potenVal;
 
   }
 
