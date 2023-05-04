@@ -82,26 +82,12 @@ void loop (){
     lcd display both
     if(T_level > threshold){
       //turn on fan
-      *port_e |= 0b00001000; //set pin 5 to HIGH
-      *port_e &= ~(0b00000100); //set pin 4 to LOW
-      *port_e |= 0b00000010;
-  
-      delay(1000);
-      *port_e |= ~(0b00000010);
-      delay(1000);
-  
-  
+      
       return(1);
     }
     else{
       //turn off fan
-      *port_e |= 0b00000100; //set pin 5 to HIGH
-      *port_e &= ~(0b00001000); //set pin 4 to LOW
-      *port_e |= 0b00000010;
-  
-      delay(1000);
-      *port_e |= ~(0b00000010);
-      delay(1000);
+     
       return(0);
     }
   }
