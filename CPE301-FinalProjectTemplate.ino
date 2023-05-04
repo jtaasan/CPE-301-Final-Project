@@ -70,20 +70,19 @@ void loop (){
     Vent_control();                   //Change Vent Position if Needed
 
     if(waterlevel == 1){
-                                      //display error
-                                      //RED LED on
-                                      //RTC timestamps error state
+      LCDerror();                     //display error
+                                      RED LED on
+                                      RTC timestamps error state
       *port_e &= ~(0b00001000);       //turn off fan
     }
     else if(water level == 0){
       if(templevel == 1){
-        LCDerror();                   //display Error
-                                      //Blue LED on
-                                      //RTC timestamps running
+                                      Blue LED on
+                                      RTC timestamps running
       }
       else{
-      //Green LED on
-      //RTC timestamps idle
+                                      Green LED on
+                                      RTC timestamps idle
       }
     }
   }
