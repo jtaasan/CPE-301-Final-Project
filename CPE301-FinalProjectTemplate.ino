@@ -3,6 +3,10 @@
 
 //barebones/structure
 
+volatile unsigned char* port_e = (unsigned char*) 0x2E; 
+volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
+volatile unsigned char* pin_e  = (unsigned char*) 0x2C;
+
 //includes (put libraries in here)
 #include <Stepper.h>
 
@@ -11,26 +15,13 @@
 int waterlevel;
 int resval = 0;  // holds the value for reservoir
 int respin = A5; // sensor pin used for reservoir
-int ledPinRed = 13;  // red LED pin
-int buttonPin = 2; // button pin for reservoir
-int buttonState = 0; // variable for reading the button status for reservoir
 
 
 void setup (){
   U0init(9600);
-  volatile unsigned char* port_e = (unsigned char*) 0x2E; 
-  volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
-  volatile unsigned char* pin_e  = (unsigned char*) 0x2C;
-  lcd.begin(16, 2);
-  pinMode(resval, INPUT); 
-  pinMode(ledPinRed, OUTPUT); 
-  
 }
 
 void loop (){
-
-Serial.begin(9600); //set baud rate
-
 *ddr_e |= 0b00001000; //enable pin 5 as output
 *ddr_e |= 0b00000100; //enable pin 4 as output
 *ddr_e |= 0b00000010; //enable pin 3 as output
@@ -142,19 +133,15 @@ void U0init(unsigned int U0baud)
  *myUBRR0  = tbaud;
 }
 
-def reservoir():
-    lcd.setCursor(0, 1)
-    resval = analogRead(respin)
-    if resval <= 100:
-        lcd.println("Water level is too low")
-        digitalWrite(ledPinRed, HIGH)
-        digitalWrite(ledPinBlue, LOW)
-        digitalWrite(ledPinGreen, LOW)
-        digitalWrite(ledPinYellow, LOW)
-        *port_e &= ~(0b00001000)
-        *port_e &= ~(0b00000100)
-        *port_e &= ~(0b00000010)
-    buttonState = digitalRead(buttonPin)
-    if buttonState == HIGH and resval > 100:
-        digitalWrite(ledPinGreen, HIGH)
-    delay(1000)
+int watercheck(){
+    resval = analogRead(respin);
+    if(resval <= 100){
+        *port_e &= ~(0b00001000);
+        *port_e &= ~(0b00000100);
+        *port_e &= ~(0b00000010);
+      return(1);
+    }
+    else{
+      return(0);
+    }
+}
