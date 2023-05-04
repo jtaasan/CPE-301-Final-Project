@@ -3,12 +3,18 @@
 
 //barebones/structure
 
+//includes (put libraries in here)
+#include <Stepper.h>
+
+
+//water variables
 int waterlevel;
 int resval = 0;  // holds the value for reservoir
 int respin = A5; // sensor pin used for reservoir
 int ledPinRed = 13;  // red LED pin
 int buttonPin = 2; // button pin for reservoir
 int buttonState = 0; // variable for reading the button status for reservoir
+
 
 void setup (){
   U0init(9600);
