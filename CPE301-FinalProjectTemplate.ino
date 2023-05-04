@@ -1,14 +1,31 @@
 //Final Project Template
 //Jonathan Taasan, Tara Hartman, Rachel Lykins, Alex Hsueh
 
-//barebones/structure
-
 //includes (put libraries in here)
 #include <Stepper.h>
+
+#include <Adafruit_Sensor.h>
+#include <DHT.h>
+#include <DHT_U.h>
+#include <LiquidCrystal.h>
+
+#define DHTPIN 7          // Digital pin connected to the DHT sensor 
+#define DHTTYPE DHT11     // DHT 11
+
+DHT dht(DHTPIN, DHTTYPE);
+LiquidCrystal lcd(12, 11, 10, 2, 3, 4, 5); //NEED TO CHANGE THE PIN OUT !!!!!!!!!!!
+
+volatile unsigned char *myUCSR0A = (unsigned char *)0x00C0;
+volatile unsigned char *myUCSR0B = (unsigned char *)0x00C1;
+volatile unsigned char *myUCSR0C = (unsigned char *)0x00C2;
+volatile unsigned int  *myUBRR0  = (unsigned int *) 0x00C4;
 
 volatile unsigned char* port_e = (unsigned char*) 0x2E; 
 volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
 volatile unsigned char* pin_e  = (unsigned char*) 0x2C;
+
+//temperature variable
+int templevel = 0;
 
 //water variables
 int waterlevel;
@@ -31,103 +48,105 @@ void setup (){
   *ddr_e |= 0b00001000; //FAN MOTOR PIN 5
   *ddr_e |= 0b00000100; //FAN MOTOR PIN 4
   *ddr_e |= 0b00000010; //FAN MOTOR PIN 3
+  
+  //DHT sensor
+  dht.begin();
+  
+  //LCD
+  lcd.begin(16,2);
 }
 
 void loop (){
-
-
-
 /*
   if button pressed, then disable system{
     RTC timestamps disabled
     Yellow LED on
   }
   //else, do either idle, error, or running{
-
+*/
     //Do these Anyways
-    waterlevel = watercheck();    //Water Level Monitoring 
-    Templevel = dhtfunction();    //Humidity and Temperature Displayed
-    Vent_control();             //Change Vent Position if Needed
+    waterlevel = watercheck();        //Water Level Monitoring 
+    templevel = dhtfunction();        //Humidity and Temperature Displayed
+    Vent_control();                   //Change Vent Position if Needed
 
     if(waterlevel == 1){
-      display error
-      RED LED on
-      RTC timestamps error state
-      Turn Fan off
+                                      //display error
+                                      //RED LED on
+                                      //RTC timestamps error state
+      *port_e &= ~(0b00001000);       //turn off fan
     }
     else if(water level == 0){
-      if(Templevel == 1){
-      display error
-      Blue LED on
-      RTC timestamps running
+      if(templevel == 1){
+        LCDerror();                   //display Error
+                                      //Blue LED on
+                                      //RTC timestamps running
       }
       else{
-      Green LED on
-      RTC timestamps idle
+      //Green LED on
+      //RTC timestamps idle
       }
     }
   }
-*/
+
 }
 
-/*
-  int watercheck(){
-    int level = ALEX'S FUNCTION();
-    if(level =< threshold){
-      display error
-      Serial.println("water level is too low");
-      return(1);
-    }
-    else{
-      clear error
-      return(0);
-    }
-  }
-
   int dhtfunction(){
-    int T_level = Jonathan's Function();
-    hum thing
-    lcd display both
-    if(T_level > threshold){
+    float temp_c = dht.readTemperature();
+    float humidity = dht.readHumidity();
+    if(temp_c > 24){
       //turn on fan
-      
+      *port_e |= ~(0b00000000);
       return(1);
     }
     else{
       //turn off fan
-     
+      *port_e &= ~(0b00001000);
       return(0);
     }
+    LCDdisplay(temp_c,humidity);
   }
 
-  void lcd function(){
-    insert lcd function here to display things
+  void LCDdisplay(int temp, int hum){
+    lcd.clear();
+    lcd.setCursor(0,0);
+
+    lcd.print("Temp:");
+    lcd.print(temp);
+    lcd.print(char(223));
+    lcd.print("C");
+
+    lcd.setCursor(0,1);
+
+    lcd.print("Hum:");
+    lcd.print(hum);
+    lcd.write("%");
   }
 
+  void LCDerror(){
+    lcd.setCursor(12,1);
+    lcd.print("WL:");
+    lcd.setCursor(12,2);
+    lcd.print("ERROR:");
+  }
+
+/*
   void RTC function(){
     insert RTC function here to keep track of time
   }
-
-//controls vent stepper motor
-  void Vent_control(){
-    potenVal = map(analogRead(A0),0,1023,0,500);
-  
-  //turns vent based on potentiometer
-    if(potenVal>Pval)
-      myMotor.step(5);
-    if(potenVal<Pval)
-      myMotor.step(-5);
-   Pval = potenVal;
-
-  }
-
-  //NEED TO INCLUDE UART FUNCTIONS THAT REPLACE SERIAL FUNCTIONS
-
-
 */
 
-void U0init(unsigned int U0baud)
-{
+//controls vent stepper motor
+void Vent_control(){
+  potenVal = map(analogRead(A0),0,1023,0,500);
+//turns vent based on potentiometer
+  if(potenVal>Pval)
+      myMotor.step(5);
+  if(potenVal<Pval)
+      myMotor.step(-5);
+  Pval = potenVal;
+}
+
+void U0init(unsigned int U0baud){
  unsigned long FCPU = 16000000;
  unsigned int tbaud;
  tbaud = (FCPU / 16 / U0baud - 1);
@@ -147,3 +166,5 @@ int watercheck(){
       return(0);
     }
 }
+
+//NEED TO INCLUDE UART FUNCTIONS THAT REPLACE SERIAL FUNCTIONS
