@@ -18,8 +18,8 @@ Serial.begin(9600); //set baud rate
 void loop() {
   // put your main code here, to run repeatedly:
 
-  *port_e |= 0b00001000; //set pin 5 to HIGH
-  *port_e &= ~(0b00000100); //set pin 4 to LOW
+  *port_e |= 0b0000100; //set pin 5 to HIGH
+  *port_e &= ~(0b000001000); //set pin 4 to LOW
   *port_e |= 0b00000010;
   
   delay(1000);
