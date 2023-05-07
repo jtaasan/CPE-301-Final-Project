@@ -48,7 +48,7 @@ void setup (){
   U0init(9600);
   
   //vent speed
-    myMotor.setSpeed(200);
+  myMotor.setSpeed(200);
   
   //fan motor
   *ddr_d |= 0b00100000; //enable pin 5 as output
@@ -68,7 +68,7 @@ void setup (){
 void loop (){
   if button pressed, then disable system{
     Serial.println("Disabled - ");                          //RTC timestamps disabled
-                                      Yellow LED on
+                                      //Yellow LED on
   }
   //else, do either idle, error, or running{
     //Do these Anyways
@@ -78,19 +78,19 @@ void loop (){
 
     if(waterlevel == 1){
       LCDerror();                     //display error
-                                      RED LED on
+                                      //RED LED on
       Serial.println("Error State - ");                               //RTC timestamps error state
       telltime();
       *port_d &= ~(0b00110000);       //turn off fan
     }
     else if(water level == 0){
       if(templevel == 1){
-                                      Blue LED on
+                                      //Blue LED on
       Serial.println("Running - ");                                //RTC timestamps running
       telltime();
       }
       else{
-                                      Green LED on
+                                      //Green LED on
       Serial.println("Idle - ");                                //RTC timestamps idle
       telltime();
       }
