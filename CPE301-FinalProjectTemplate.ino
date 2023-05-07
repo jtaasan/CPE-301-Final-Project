@@ -9,8 +9,14 @@
 #include <DHT_U.h>
 #include <LiquidCrystal.h>
 
+#include "RTClib.h"
+
 #define DHTPIN 7          // Digital pin connected to the DHT sensor 
 #define DHTTYPE DHT11     // DHT 11
+
+RTC_DS1307 rtc;
+
+char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
 DHT dht(DHTPIN, DHTTYPE);
 LiquidCrystal lcd(12, 11, 10, 2, 3, 4, 5); //NEED TO CHANGE THE PIN OUT !!!!!!!!!!!
@@ -54,16 +60,18 @@ void setup (){
   
   //LCD
   lcd.begin(16,2);
+  
+  //Real Time Clock Module
+  rtc.begin();
+  rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 }
 
 void loop (){
-/*
   if button pressed, then disable system{
-    RTC timestamps disabled
-    Yellow LED on
+    Serial.println("Disabled - ");                          //RTC timestamps disabled
+                                      Yellow LED on
   }
   //else, do either idle, error, or running{
-*/
     //Do these Anyways
     waterlevel = watercheck();        //Water Level Monitoring 
     templevel = dhtfunction();        //Humidity and Temperature Displayed
@@ -72,17 +80,20 @@ void loop (){
     if(waterlevel == 1){
       LCDerror();                     //display error
                                       RED LED on
-                                      RTC timestamps error state
+      Serial.println("Error State - ");                               //RTC timestamps error state
+      telltime();
       *port_e &= ~(0b00001000);       //turn off fan
     }
     else if(water level == 0){
       if(templevel == 1){
                                       Blue LED on
-                                      RTC timestamps running
+      Serial.println("Running - ");                                //RTC timestamps running
+      telltime();
       }
       else{
                                       Green LED on
-                                      RTC timestamps idle
+      Serial.println("Idle - ");                                //RTC timestamps idle
+      telltime();
       }
     }
   }
@@ -128,11 +139,44 @@ void loop (){
     lcd.print("ERROR:");
   }
 
-/*
-  void RTC function(){
-    insert RTC function here to keep track of time
-  }
-*/
+void telltime(){
+  DateTime now = rtc.now();
+
+    Serial.print(now.year(), DEC);
+    Serial.print('/');
+    Serial.print(now.month(), DEC);
+    Serial.print('/');
+    Serial.print(now.day(), DEC);
+    Serial.print(" (");
+    Serial.print(daysOfTheWeek[now.dayOfTheWeek()]);
+    Serial.print(") ");
+    if(now.hour() < 10){
+      Serial.print("0");
+      Serial.print(now.hour(), DEC);
+    }
+    else{
+      Serial.print(now.hour(), DEC);
+    }
+    if(now.minute() < 10){
+      Serial.print(":");
+      Serial.print("0");
+      Serial.print(now.minute(), DEC);
+    }
+    else{
+      Serial.print(":");
+      Serial.print(now.minute(), DEC);
+    }
+    if(now.second() < 10){
+      Serial.print(":");
+      Serial.print("0");
+      Serial.print(now.second(), DEC);
+    }
+    else{
+      Serial.print(":");
+      Serial.print(now.second(), DEC);
+    }
+    Serial.println();
+}
 
 //controls vent stepper motor
 void Vent_control(){
