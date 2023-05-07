@@ -1,16 +1,15 @@
 
 //iteration 4
-volatile unsigned char* port_e = (unsigned char*) 0x2E; 
-volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
-volatile unsigned char* pin_e  = (unsigned char*) 0x2C;
+volatile unsigned char* port_d = (unsigned char*) 0x102; 
+volatile unsigned char* ddr_d  = (unsigned char*) 0x101; 
+volatile unsigned char* pin_d  = (unsigned char*) 0x100;
 
 void setup() {
   // put your setup code here, to run once:
 Serial.begin(9600); //set baud rate
 
-*ddr_e |= 0b00001000; //enable pin 5 as output
-*ddr_e |= 0b00000100; //enable pin 4 as output
-*ddr_e |= 0b00000010; //enable pin 3 as output
+*ddr_d |= 0b00100000; //enable pin 5 as output
+*ddr_d |= 0b00010000; //enable pin 4 as output
 }
 
 void loop() {
@@ -18,12 +17,12 @@ void loop() {
 
   Serial.println("Turning the motor off") ;
   //*port_e |= 0b0000100; //set pin 5 to HIGH
-  *port_e &= ~(0b00001000); //set pin 4 to LOW
+  *port_d &= ~(0b00110000); //set pin 4 to LOW
   //*port_e |= 0b00000010;
   delay(5000);
 
   Serial.println("Turning the motor on");
-  *port_e |= ~(0b00000000);
+  *port_d |= (0b00110000);
   delay(5000);
 }
 
