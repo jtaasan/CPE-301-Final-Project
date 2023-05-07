@@ -11,7 +11,7 @@
 
 #include "RTClib.h"
 
-#define DHTPIN 7          // Digital pin connected to the DHT sensor 
+#define DHTPIN 25          // Digital pin connected to the DHT sensor 
 #define DHTTYPE DHT11     // DHT 11
 
 RTC_DS1307 rtc;
