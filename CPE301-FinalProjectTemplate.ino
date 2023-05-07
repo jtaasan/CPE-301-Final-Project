@@ -26,9 +26,9 @@ volatile unsigned char *myUCSR0B = (unsigned char *)0x00C1;
 volatile unsigned char *myUCSR0C = (unsigned char *)0x00C2;
 volatile unsigned int  *myUBRR0  = (unsigned int *) 0x00C4;
 
-volatile unsigned char* port_e = (unsigned char*) 0x2E; 
-volatile unsigned char* ddr_e  = (unsigned char*) 0x2D; 
-volatile unsigned char* pin_e  = (unsigned char*) 0x2C;
+volatile unsigned char* port_d = (unsigned char*) 0x102; 
+volatile unsigned char* ddr_d  = (unsigned char*) 0x101; 
+volatile unsigned char* pin_d  = (unsigned char*) 0x100;
 
 //temperature variable
 int templevel = 0;
@@ -51,9 +51,8 @@ void setup (){
     myMotor.setSpeed(200);
   
   //fan motor
-  *ddr_e |= 0b00001000; //FAN MOTOR PIN 5
-  *ddr_e |= 0b00000100; //FAN MOTOR PIN 4
-  *ddr_e |= 0b00000010; //FAN MOTOR PIN 3
+  *ddr_d |= 0b00100000; //enable pin 5 as output
+  *ddr_d |= 0b00010000; //enable pin 4 as output
   
   //DHT sensor
   dht.begin();
@@ -82,7 +81,7 @@ void loop (){
                                       RED LED on
       Serial.println("Error State - ");                               //RTC timestamps error state
       telltime();
-      *port_e &= ~(0b00001000);       //turn off fan
+      *port_d &= ~(0b00110000);       //turn off fan
     }
     else if(water level == 0){
       if(templevel == 1){
@@ -105,12 +104,11 @@ void loop (){
     float humidity = dht.readHumidity();
     if(temp_c > 24){
       //turn on fan
-      *port_e |= ~(0b00000000);
+      *port_d |= (0b00110000);
       return(1);
     }
     else{
-      //turn off fan
-      *port_e &= ~(0b00001000);
+      *port_d &= ~(0b00110000);     //turn off fan
       return(0);
     }
     LCDdisplay(temp_c,humidity);
