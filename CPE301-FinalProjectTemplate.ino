@@ -1,6 +1,7 @@
 //Final Project Template
 //Jonathan Taasan, Tara Hartman, Rachel Lykins, Alex Hsueh
 
+
 //includes (put libraries in here)
 #include <Stepper.h>
 
@@ -32,6 +33,8 @@ volatile unsigned char* pin_d  = (unsigned char*) 0x100;
 
 //temperature variable
 int templevel = 0;
+
+int potato = 0;
 
 //water variables
 int waterlevel;
@@ -66,11 +69,11 @@ void setup (){
 }
 
 void loop (){
-  if button pressed, then disable system{
+  if(potato == 1){
     Serial.println("Disabled - ");                          //RTC timestamps disabled
                                       //Yellow LED on
   }
-  //else, do either idle, error, or running{
+  else{
     //Do these Anyways
     waterlevel = watercheck();        //Water Level Monitoring 
     templevel = dhtfunction();        //Humidity and Temperature Displayed
@@ -83,7 +86,7 @@ void loop (){
       telltime();
       *port_d &= ~(0b00110000);       //turn off fan
     }
-    else if(water level == 0){
+    else if(waterlevel == 0){
       if(templevel == 1){
                                       //Blue LED on
       Serial.println("Running - ");                                //RTC timestamps running
@@ -207,5 +210,4 @@ int watercheck(){
       return(0);
     }
 }
-
 //NEED TO INCLUDE UART FUNCTIONS THAT REPLACE SERIAL FUNCTIONS
