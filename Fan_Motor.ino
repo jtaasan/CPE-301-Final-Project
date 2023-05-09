@@ -1,30 +1,61 @@
-
-//iteration 4
-volatile unsigned char* port_d = (unsigned char*) 0x102; 
-volatile unsigned char* ddr_d  = (unsigned char*) 0x101; 
-volatile unsigned char* pin_d  = (unsigned char*) 0x100;
+//iteration 5: pin 7
+volatile unsigned char* port_h = (unsigned char*) 0x102; 
+volatile unsigned char* ddr_h  = (unsigned char*) 0x101; 
+volatile unsigned char* pin_h  = (unsigned char*) 0x100;
 
 void setup() {
   // put your setup code here, to run once:
 Serial.begin(9600); //set baud rate
 
-*ddr_d |= 0b00100000; //enable pin 5 as output
-*ddr_d |= 0b00010000; //enable pin 4 as output
+*ddr_h |= 0b00010000; //enable pin 7 as output
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+delay(1000) ;
   Serial.println("Turning the motor off") ;
-  //*port_e |= 0b0000100; //set pin 5 to HIGH
-  *port_d &= ~(0b00110000); //set pin 4 to LOW
-  //*port_e |= 0b00000010;
-  delay(5000);
+  *port_h &= ~(0b00010000);
+  delay(1000);
 
   Serial.println("Turning the motor on");
-  *port_d |= (0b00110000);
-  delay(5000);
+  *port_h |= (0b00010000);
 }
+
+
+
+
+
+
+
+
+
+
+//iteration 4
+//volatile unsigned char* port_d = (unsigned char*) 0x102; 
+//volatile unsigned char* ddr_d  = (unsigned char*) 0x101; 
+//volatile unsigned char* pin_d  = (unsigned char*) 0x100;
+
+//void setup() {
+  // put your setup code here, to run once:
+//Serial.begin(9600); //set baud rate
+
+//*ddr_d |= 0b00100000; //enable pin 5 as output
+//*ddr_d |= 0b00010000; //enable pin 4 as output
+//}
+
+//void loop() {
+  // put your main code here, to run repeatedly:
+
+  //Serial.println("Turning the motor off") ;
+  //*port_e |= 0b0000100; //set pin 5 to HIGH
+  //*port_d &= ~(0b00110000); //set pin 4 to LOW
+  //*port_e |= 0b00000010;
+  //delay(5000);
+
+  //Serial.println("Turning the motor on");
+  //*port_d |= (0b00110000);
+  //delay(5000);
+//}
 
 
 
