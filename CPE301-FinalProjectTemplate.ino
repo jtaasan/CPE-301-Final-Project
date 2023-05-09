@@ -243,7 +243,7 @@ void telltime(){
 
 //controls vent stepper motor
 void Vent_control(){
-  potenVal = map(analogRead(A0),0,1023,0,500);
+  potenVal = map(analogRead(A2),0,1023,0,500);
 //turns vent based on potentiometer
   if(potenVal>Pval)
       myMotor.step(5);
