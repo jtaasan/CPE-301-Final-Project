@@ -1,24 +1,21 @@
-//iteration 5: pin 7
+//iteration 5: pin 8,7,6
 volatile unsigned char* port_h = (unsigned char*) 0x102; 
 volatile unsigned char* ddr_h  = (unsigned char*) 0x101; 
 volatile unsigned char* pin_h  = (unsigned char*) 0x100;
 
-void setup() {
-  // put your setup code here, to run once:
-Serial.begin(9600); //set baud rate
-
-*ddr_h |= 0b00010000; //enable pin 7 as output
+void setup(){
+  Serial.begin(9600);
+  *ddr_h |= 0b000111000;
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-delay(1000) ;
-  Serial.println("Turning the motor off") ;
-  *port_h &= ~(0b00010000);
+void loop(){
+  *port_h |= 0b000101000;
+
   delay(1000);
 
-  Serial.println("Turning the motor on");
-  *port_h |= (0b00010000);
+  *port_h &= (0b000000000);
+  
+  delay(1000);
 }
 
 
